@@ -422,7 +422,7 @@ string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UC)
 if(MSVC_LIKE)
   option(WITH_CRT_DLL
     "Link all ${CMAKE_PROJECT_NAME} libraries and executables with the C run-time DLL (msvcr*.dll) instead of the static C run-time library (libcmt*.lib.)  The default is to use the C run-time DLL only with the libraries and executables that need it."
-    FALSE)
+    TRUE)
   boolean_number(WITH_CRT_DLL)
   if(NOT WITH_CRT_DLL)
     # Use the static C library for all build types
@@ -797,6 +797,9 @@ if(WITH_TURBOJPEG)
     add_library(turbojpeg-static STATIC ${TURBOJPEG_SOURCES})
     set_property(TARGET turbojpeg-static PROPERTY COMPILE_FLAGS
       "-DBMP_SUPPORTED -DPPM_SUPPORTED")
+    
+    # Runtime library will use DLL (/MD, /MDd) due to global WITH_CRT_DLL=TRUE setting
+    
     if(NOT MSVC_LIKE)
       set_target_properties(turbojpeg-static PROPERTIES OUTPUT_NAME turbojpeg)
     endif()
